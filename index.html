@@ -1,130 +1,230 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <link rel="apple-touch-icon" href="IMG_0022.jpeg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SeaBank Face ID Final</title>
+    <title>SeaBank Full Clone</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        :root { --sb-orange: #FF5500; --ios-green: #32d74b; }
+        :root { --sb-orange: #FF5500; --sb-blue: #3B82F6; --sb-bg: #F4F5F7; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body, html { height: 100%; font-family: -apple-system, sans-serif; background: #000; overflow: hidden; }
+        body, html { height: 100%; font-family: -apple-system, system-ui, sans-serif; background: var(--sb-bg); overflow: hidden; }
 
-        /* FACE ID CONTAINER */
-        #view-faceid { 
-            display: flex; height: 100vh; width: 100vw; 
-            background: #000; justify-content: center; align-items: center; flex-direction: column; 
-        }
+        /* Navigation & View Manager */
+        .view { display: none; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; overflow-y: auto; overflow-x: hidden; padding-bottom: 100px; }
+        .active { display: flex; flex-direction: column; }
 
-        /* Bingkai Kotak Muka iPhone Style */
-        .face-frame {
-            position: relative; width: 160px; height: 160px;
-            border-radius: 45px; border: 1px solid rgba(255,255,255,0.15);
-            display: flex; justify-content: center; align-items: center;
-        }
+        /* VIEW 1: HOME SCREEN */
+        #view-home-screen { background: #1c1c1e; justify-content: center; align-items: center; padding: 0; }
+        .app-icon { width: 75px; height: 75px; background: white; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); cursor: pointer; }
+        .s-logo { color: var(--sb-orange); font-size: 45px; font-weight: 800; line-height: 0.8; }
+        .waves { width: 35px; height: 5px; background: var(--sb-blue); border-radius: 10px; margin-top: 2px; }
 
-        /* Sudut Kotak yang Menyala Hijau */
-        .corner { position: absolute; width: 35px; height: 35px; border: 4.5px solid var(--ios-green); border-radius: 8px; }
-        .tl { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
-        .tr { top: -2px; right: -2px; border-left: 0; border-bottom: 0; }
-        .bl { bottom: -2px; left: -2px; border-right: 0; border-top: 0; }
-        .br { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+        /* VIEW 2: FACE ID (iPhone Style) */
+        #view-faceid { background: white; justify-content: center; align-items: center; padding: 0; }
+        .faceid-box { position: relative; width: 130px; height: 130px; margin-top: -100px; display: flex; align-items: center; justify-content: center; }
+        .ring { position: absolute; width: 100%; height: 100%; border: 5px solid #f3f3f3; border-radius: 35px; border-top: 5px solid #32d74b; animation: spin 1s linear infinite; transition: all 0.3s ease; }
+        .ring.success { border: 5px solid #32d74b; animation: none; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .face-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 55px; color: #32d74b; transition: all 0.3s ease; }
 
-        /* Container Bola Orbital */
-        #canvas-container { width: 120px; height: 120px; border-radius: 50%; }
+        /* VIEW 3: DASHBOARD */
+        header { padding: 55px 20px 15px; display: flex; justify-content: space-between; align-items: center; background: white; }
+        .avatar { width: 42px; height: 42px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+        
+        .orange-card { background: linear-gradient(135deg, #FF8000, #FF5500); margin: 15px; padding: 20px; border-radius: 15px; color: white; box-shadow: 0 4px 12px rgba(255,85,0,0.15); }
+        .main-balance { font-size: 26px; font-weight: bold; margin: 12px 0 18px; }
 
-        /* Centang Hijau (Success UI) */
-        .check-container {
-            display: none; position: absolute; 
-            animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .check-container i { font-size: 75px; color: var(--ios-green); filter: drop-shadow(0 0 10px rgba(50,215,75,0.5)); }
+        .menu-grid { background: white; margin: 0 15px 15px; padding: 20px 10px; border-radius: 15px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 5px; }
+        .menu-item { text-align: center; font-size: 11px; color: #444; }
+        .menu-item i { font-size: 24px; color: var(--sb-orange); margin-bottom: 8px; display: block; }
 
-        @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .flash-deals-section { background: #FFF5E9; margin: 0 15px 15px; padding: 15px; border-radius: 15px; border: 1px solid #FFE0B2; }
+        .flash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .flash-title { color: #333; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .flash-scroll { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 5px; scrollbar-width: none; }
+        .flash-card { background: white; min-width: 140px; padding: 12px; border-radius: 12px; position: relative; }
+        .card-rate { color: var(--sb-orange); font-size: 18px; font-weight: bold; }
+        .card-sub { color: #999; font-size: 10px; margin-bottom: 10px; }
+        .progress-bar { height: 4px; background: #eee; border-radius: 5px; overflow: hidden; }
+        .progress-fill { width: 70%; height: 100%; background: #ddd; }
 
-        /* Text Face ID */
-        .status-text { color: white; margin-top: 45px; font-size: 17px; font-weight: 500; letter-spacing: 0.5px; opacity: 0.9; }
+        .pinjam-banner { background: white; margin: 0 15px 15px; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .pinjam-btn { background: var(--sb-orange); color: white; padding: 8px 18px; border-radius: 8px; font-weight: bold; border: none; font-size: 14px; }
 
-        /* DASHBOARD (Placeholder) */
-        #view-dashboard { display: none; height: 100vh; width: 100vw; background: #F4F5F7; padding: 60px 20px; }
+        .zakat-banner { margin: 0 15px 15px; border-radius: 15px; overflow: hidden; position: relative; height: 150px; background: #0066FF; color: white; padding: 20px; }
+        .zakat-content h3 { font-size: 18px; margin-bottom: 10px; max-width: 60%; line-height: 1.2; }
+        .zakat-img { position: absolute; right: 0; bottom: 0; width: 160px; pointer-events: none; }
+
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0 30px; border-top: 1px solid #eee; z-index: 100; }
+        .nav-link { text-align: center; color: #999; font-size: 10px; }
+        .nav-link.active { color: var(--sb-orange); }
+        .qris-btn { width: 52px; height: 52px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-top: -28px; box-shadow: 0 4px 12px rgba(255,85,0,0.3); font-size: 24px; }
     </style>
 </head>
 <body>
 
-    <div id="view-faceid">
-        <div class="face-frame" id="frame">
-            <div class="corner tl"></div><div class="corner tr"></div>
-            <div class="corner bl"></div><div class="corner br"></div>
-            
-            <div id="canvas-container"></div>
-            
-            <div class="check-container" id="check-ui">
-                <i class="fa-solid fa-check"></i>
-            </div>
+    <div id="view-home-screen" class="view active">
+        <div class="app-icon" id="btn-start">
+            <span class="s-logo">S</span>
+            <div class="waves"></div>
         </div>
-        <p class="status-text" id="status">Face ID</p>
+        <p style="color:white; margin-top:15px; font-size:13px; font-weight:500;">SeaBank</p>
     </div>
 
-    <div id="view-dashboard">
-        <h2 style="color:var(--sb-orange)">SeaBank Dashboard</h2>
-        <p>Selamat datang, Hartono Indra Djaja</p>
+    <div id="view-faceid" class="view">
+        <div class="faceid-box">
+            <div class="ring" id="faceid-ring"></div>
+            <div class="face-icon" id="faceid-icon"><i class="fa-solid fa-face-smile"></i></div>
+        </div>
+        <div style="position:absolute; bottom:80px; text-align:center;">
+            <p style="color:var(--sb-orange); font-size:24px; font-weight:bold;">SeaBank</p>
+        </div>
+    </div>
+
+    <div id="view-dashboard" class="view">
+        <header>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                <div>
+                    <p style="font-weight:bold; font-size:15px;">Hartono Indra Djaja</p>
+                    <p style="font-size:11px; color:#888;">No. Rekening: 9014 3103 1500 <i class="fa-regular fa-copy"></i></p>
+                </div>
+            </div>
+            <i class="fa-regular fa-bell" style="font-size:22px;"></i>
+        </header>
+
+        <div class="orange-card" id="balance-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; opacity:0.9;">
+                <span>Total Saldo <i id="eye-icon" class="fa-regular fa-eye-slash"></i></span>
+                <span style="background:rgba(255,255,255,0.2); padding:3px 10px; border-radius:12px;">Riwayat ></span>
+            </div>
+            <div class="main-balance" id="val-main">Rp ******</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; font-size:12px;">
+                <div>
+                    <p style="opacity:0.8; margin-bottom:4px;">Tabungan ></p>
+                    <p id="val-sub1" style="font-weight:bold; font-size:14px;">Rp ****</p>
+                    <p style="font-size:10px; opacity:0.7;">2,5% p.a. cair harian</p>
+                </div>
+                <div>
+                    <p style="opacity:0.8; margin-bottom:4px;">Deposito ></p>
+                    <p id="val-sub2" style="font-weight:bold; font-size:14px;">Rp ****</p>
+                    <p style="font-size:10px; opacity:0.7;">Hingga 6% p.a.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-grid">
+            <div class="menu-item"><i class="fa-solid fa-paper-plane"></i>Transfer</div>
+            <div class="menu-item"><i class="fa-solid fa-file-invoice-dollar"></i>Top Up</div>
+            <div class="menu-item"><i class="fa-solid fa-wallet"></i>E-Wallet</div>
+            <div class="menu-item"><i class="fa-solid fa-user-plus"></i>Undang</div>
+            <div class="menu-item"><i class="fa-solid fa-piggy-bank"></i>Deposito</div>
+            <div class="menu-item"><i class="fa-solid fa-money-bill-transfer"></i>Tarik Tunai</div>
+            <div class="menu-item"><i class="fa-solid fa-hand-holding-dollar"></i>Pinjam</div>
+            <div class="menu-item"><i class="fa-solid fa-ellipsis"></i>Lainnya</div>
+        </div>
+
+        <div class="flash-deals-section">
+            <div class="flash-header">
+                <div class="flash-title"><i class="fa-solid fa-clock-rotate-left" style="color:var(--sb-orange)"></i> Deposito Flash Deals</div>
+                <i class="fa-solid fa-chevron-up" style="font-size:12px; color:#999;"></i>
+            </div>
+            <p style="font-size:11px; color:#666; margin-bottom:12px;">Total <span style="color:var(--sb-orange); font-weight:bold;">Rp 120 miliar</span> telah ditempatkan.</p>
+            <div class="flash-scroll">
+                <div class="flash-card">
+                    <p style="font-size:11px; font-weight:bold;">12 bulan</p>
+                    <p class="card-rate">7% p.a.</p>
+                    <p class="card-sub"><s>6% p.a.</s></p>
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
+                </div>
+                <div class="flash-card">
+                    <p style="font-size:11px; font-weight:bold;">6 bulan</p>
+                    <p class="card-rate">6% p.a.</p>
+                    <p class="card-sub"><s>5,25% p.a.</s></p>
+                    <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pinjam-banner">
+            <div>
+                <p style="font-weight:bold; font-size:14px;">SeaBank Pinjam</p>
+                <p style="font-size:11px; color:#888; margin:4px 0;">Limit hingga</p>
+                <p style="font-size:18px; font-weight:bold;">Rp 30.000.000</p>
+            </div>
+            <button class="pinjam-btn">Ajukan</button>
+        </div>
+
+        <div class="zakat-banner">
+            <div class="zakat-content">
+                <p style="font-size:11px; font-weight:bold; opacity:0.8;">Makin Banyak Pilihan!</p>
+                <h3>Bayar Zakat & Donasi</h3>
+                <div style="background:white; color:#0066FF; display:inline-block; padding:4px 10px; border-radius:20px; font-size:10px; font-weight:bold;">Cek Sekarang</div>
+            </div>
+            <img src="https://rumah-yatim.org/wp-content/uploads/2021/01/logo-ry-white.png" class="zakat-img" style="width:80px; bottom:20px; right:20px; opacity:0.5;">
+        </div>
+
+        <nav class="bottom-nav">
+            <div class="nav-link active"><i class="fa-solid fa-house" style="font-size:20px; margin-bottom:4px; display:block;"></i>Beranda</div>
+            <div class="nav-link"><i class="fa-solid fa-right-left" style="font-size:20px; margin-bottom:4px; display:block;"></i>Transfer</div>
+            <div class="qris-btn"><i class="fa-solid fa-qrcode"></i></div>
+            <div class="nav-link"><i class="fa-solid fa-sack-dollar" style="font-size:20px; margin-bottom:4px; display:block;"></i>Deposito</div>
+            <div class="nav-link"><i class="fa-solid fa-user" style="font-size:20px; margin-bottom:4px; display:block;"></i>Saya</div>
+        </nav>
     </div>
 
     <script>
-        let scene, camera, renderer, globe;
+        // Logika Transisi dengan Animasi Face ID baru
+        document.getElementById('btn-start').addEventListener('click', function() {
+            document.getElementById('view-home-screen').style.display = 'none';
+            document.getElementById('view-faceid').style.display = 'flex';
+            
+            const ring = document.getElementById('faceid-ring');
+            const icon = document.getElementById('faceid-icon').querySelector('i');
 
-        function init3D() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(60, 1, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(120, 120);
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-            // Membuat Efek Orbital Partikel (Bentuk Globe)
-            const geometry = new THREE.IcosahedronGeometry(1.5, 3); // Lebih halus & geometris
-            const material = new THREE.PointsMaterial({ 
-                color: 0x32d74b, 
-                size: 0.06, 
-                transparent: true, 
-                opacity: 0.6 
-            });
-
-            globe = new THREE.Points(geometry, material);
-            scene.add(globe);
-            camera.position.z = 4;
-
-            function animate() {
-                requestAnimationFrame(animate);
-                globe.rotation.y += 0.025; // Putaran orbital horizontal
-                globe.rotation.x += 0.015; // Putaran orbital vertikal
-                renderer.render(scene, camera);
-            }
-            animate();
-        }
-
-        // Jalankan saat Load
-        window.onload = () => {
-            init3D();
-
-            // Skenario Transisi
+            // 1. Proses Scan (Ring berputar)
             setTimeout(() => {
-                // 1. Matikan Animasi Orbital
-                document.getElementById('canvas-container').style.display = 'none';
-                
-                // 2. Tampilkan Centang Hijau
-                const checkUI = document.getElementById('check-ui');
-                checkUI.style.display = 'block';
-                document.getElementById('status').innerText = "Berhasil";
+                // 2. Berhenti Berputar & Tanda Sukses (Centang)
+                ring.classList.add('success');
+                icon.classList.replace('fa-face-smile', 'fa-check');
+                icon.style.fontSize = "65px";
+            }, 1600);
 
-                // 3. Jeda 1 Detik Persis
-                setTimeout(() => {
-                    document.getElementById('view-faceid').style.display = 'none';
-                    document.getElementById('view-dashboard').style.display = 'block';
-                }, 1000);
+            // 3. Masuk Dashboard
+            setTimeout(() => {
+                document.getElementById('view-faceid').style.display = 'none';
+                document.getElementById('view-dashboard').style.display = 'block';
+            }, 2300);
+        });
 
-            }, 2800); // Durasi scan 2.8 detik
-        };
+        // Logika Toggle Saldo
+        let visible = false;
+        document.getElementById('balance-card').addEventListener('click', function() {
+            const m = document.getElementById('val-main');
+            const s1 = document.getElementById('val-sub1');
+            const s2 = document.getElementById('val-sub2');
+            const eye = document.getElementById('eye-icon');
+
+            if(!visible) {
+                m.innerText = "Rp 102.722.850";
+                s1.innerText = "Rp 102.722.850";
+                s2.innerText = "Rp 0";
+                eye.classList.replace('fa-eye-slash', 'fa-eye');
+                visible = true;
+            } else {
+                m.innerText = "Rp ******";
+                s1.innerText = "Rp ****";
+                s2.innerText = "Rp ****";
+                eye.classList.replace('fa-eye', 'fa-eye-slash');
+                visible = false;
+            }
+        });
     </script>
 </body>
 </html>
