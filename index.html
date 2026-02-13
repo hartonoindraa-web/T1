@@ -19,54 +19,48 @@
         .view { display: none; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; overflow-y: auto; overflow-x: hidden; padding-bottom: 100px; }
         .active { display: flex; flex-direction: column; }
 
-        /* VIEW 1: HOME SCREEN (IMG_0017) */
+        /* VIEW 1: HOME SCREEN */
         #view-home-screen { background: #1c1c1e; justify-content: center; align-items: center; padding: 0; }
         .app-icon { width: 75px; height: 75px; background: white; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); cursor: pointer; }
         .s-logo { color: var(--sb-orange); font-size: 45px; font-weight: 800; line-height: 0.8; }
         .waves { width: 35px; height: 5px; background: var(--sb-blue); border-radius: 10px; margin-top: 2px; }
 
-        /* VIEW 2: FACE ID (IMG_0018) */
+        /* VIEW 2: FACE ID (iPhone Style) */
         #view-faceid { background: white; justify-content: center; align-items: center; padding: 0; }
-        .faceid-box { position: relative; width: 120px; height: 120px; margin-top: -100px; }
-        .ring { width: 100%; height: 100%; border: 6px solid #f3f3f3; border-top: 6px solid #32d74b; border-radius: 50%; animation: spin 1s linear infinite; }
+        .faceid-box { position: relative; width: 130px; height: 130px; margin-top: -100px; display: flex; align-items: center; justify-content: center; }
+        .ring { position: absolute; width: 100%; height: 100%; border: 5px solid #f3f3f3; border-radius: 35px; border-top: 5px solid #32d74b; animation: spin 1s linear infinite; transition: all 0.3s ease; }
+        .ring.success { border: 5px solid #32d74b; animation: none; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        .face-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: #32d74b; }
+        .face-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 55px; color: #32d74b; transition: all 0.3s ease; }
 
-        /* VIEW 3: DASHBOARD (IMG_0016) */
+        /* VIEW 3: DASHBOARD */
         header { padding: 55px 20px 15px; display: flex; justify-content: space-between; align-items: center; background: white; }
         .avatar { width: 42px; height: 42px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
         
-        /* Kartu Saldo */
         .orange-card { background: linear-gradient(135deg, #FF8000, #FF5500); margin: 15px; padding: 20px; border-radius: 15px; color: white; box-shadow: 0 4px 12px rgba(255,85,0,0.15); }
         .main-balance { font-size: 26px; font-weight: bold; margin: 12px 0 18px; }
 
-        /* Menu Grid 8 Item (IMG_0016) */
         .menu-grid { background: white; margin: 0 15px 15px; padding: 20px 10px; border-radius: 15px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 5px; }
         .menu-item { text-align: center; font-size: 11px; color: #444; }
         .menu-item i { font-size: 24px; color: var(--sb-orange); margin-bottom: 8px; display: block; }
 
-        /* Deposito Flash Deals (IMG_0020) */
         .flash-deals-section { background: #FFF5E9; margin: 0 15px 15px; padding: 15px; border-radius: 15px; border: 1px solid #FFE0B2; }
         .flash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .flash-title { color: #333; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 8px; }
         .flash-scroll { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 5px; scrollbar-width: none; }
-        .flash-scroll::-webkit-scrollbar { display: none; }
         .flash-card { background: white; min-width: 140px; padding: 12px; border-radius: 12px; position: relative; }
         .card-rate { color: var(--sb-orange); font-size: 18px; font-weight: bold; }
         .card-sub { color: #999; font-size: 10px; margin-bottom: 10px; }
         .progress-bar { height: 4px; background: #eee; border-radius: 5px; overflow: hidden; }
         .progress-fill { width: 70%; height: 100%; background: #ddd; }
 
-        /* Banner SeaBank Pinjam (IMG_0016) */
         .pinjam-banner { background: white; margin: 0 15px 15px; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; }
         .pinjam-btn { background: var(--sb-orange); color: white; padding: 8px 18px; border-radius: 8px; font-weight: bold; border: none; font-size: 14px; }
 
-        /* Banner Zakat/Donasi (IMG_0016) */
         .zakat-banner { margin: 0 15px 15px; border-radius: 15px; overflow: hidden; position: relative; height: 150px; background: #0066FF; color: white; padding: 20px; }
         .zakat-content h3 { font-size: 18px; margin-bottom: 10px; max-width: 60%; line-height: 1.2; }
         .zakat-img { position: absolute; right: 0; bottom: 0; width: 160px; pointer-events: none; }
 
-        /* Navigation Bawah */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0 30px; border-top: 1px solid #eee; z-index: 100; }
         .nav-link { text-align: center; color: #999; font-size: 10px; }
         .nav-link.active { color: var(--sb-orange); }
@@ -85,8 +79,8 @@
 
     <div id="view-faceid" class="view">
         <div class="faceid-box">
-            <div class="ring"></div>
-            <div class="face-icon"><i class="fa-solid fa-face-smile"></i></div>
+            <div class="ring" id="faceid-ring"></div>
+            <div class="face-icon" id="faceid-icon"><i class="fa-solid fa-face-smile"></i></div>
         </div>
         <div style="position:absolute; bottom:80px; text-align:center;">
             <p style="color:var(--sb-orange); font-size:24px; font-weight:bold;">SeaBank</p>
@@ -156,7 +150,6 @@
                     <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
                 </div>
             </div>
-            <p style="font-size:10px; color:var(--sb-orange); margin-top:10px; text-align:center;">Mulai Setiap Kamis pk. 19.00 WIB</p>
         </div>
 
         <div class="pinjam-banner">
@@ -177,8 +170,6 @@
             <img src="https://rumah-yatim.org/wp-content/uploads/2021/01/logo-ry-white.png" class="zakat-img" style="width:80px; bottom:20px; right:20px; opacity:0.5;">
         </div>
 
-        <div style="height:20px;"></div>
-
         <nav class="bottom-nav">
             <div class="nav-link active"><i class="fa-solid fa-house" style="font-size:20px; margin-bottom:4px; display:block;"></i>Beranda</div>
             <div class="nav-link"><i class="fa-solid fa-right-left" style="font-size:20px; margin-bottom:4px; display:block;"></i>Transfer</div>
@@ -189,18 +180,30 @@
     </div>
 
     <script>
-        // Logika Pindah Screen
+        // Logika Transisi dengan Animasi Face ID baru
         document.getElementById('btn-start').addEventListener('click', function() {
             document.getElementById('view-home-screen').style.display = 'none';
             document.getElementById('view-faceid').style.display = 'flex';
             
+            const ring = document.getElementById('faceid-ring');
+            const icon = document.getElementById('faceid-icon').querySelector('i');
+
+            // 1. Proses Scan (Ring berputar)
+            setTimeout(() => {
+                // 2. Berhenti Berputar & Tanda Sukses (Centang)
+                ring.classList.add('success');
+                icon.classList.replace('fa-face-smile', 'fa-check');
+                icon.style.fontSize = "65px";
+            }, 1600);
+
+            // 3. Masuk Dashboard
             setTimeout(() => {
                 document.getElementById('view-faceid').style.display = 'none';
                 document.getElementById('view-dashboard').style.display = 'block';
-            }, 2000);
+            }, 2300);
         });
 
-        // Logika Toggle Saldo (FIXED)
+        // Logika Toggle Saldo
         let visible = false;
         document.getElementById('balance-card').addEventListener('click', function() {
             const m = document.getElementById('val-main');
