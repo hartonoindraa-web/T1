@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffffff;
+            font-family: sans-serif;
+        }
+        .logo-container {
+            text-align: center;
+        }
+        /* Menggunakan CSS murni untuk logo S agar tidak perlu upload gambar */
+        .logo-circle {
+            width: 80px;
+            height: 80px;
+            background-color: #FF5500;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 10px;
+            border: 4px solid #fff;
+            box-shadow: 0 0 0 2px #FF5500; /* Efek ring luar */
+        }
+        .logo-text {
+            color: white;
+            font-size: 50px;
+            font-weight: bold;
+        }
+        .brand-name {
+            color: #FF5500;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .wave-decoration {
+            width: 60px;
+            height: 10px;
+            background: #3B82F6;
+            margin: 5px auto;
+            border-radius: 10px;
+        }
+    </style>
+    <script>
+        setTimeout(function(){
+           window.location.href = 'index.html';
+        }, 3000);
+    </script>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="logo-circle">
+            <span class="logo-text">S</span>
+        </div>
+        <div class="wave-decoration"></div>
+        <div class="brand-name">MyBank</div>
+    </div>
+</body>
+</html>
