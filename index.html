@@ -1,58 +1,75 @@
-<!DOCTYPE html>
+<!<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SeaBank</title>
+    <title>SeaBank Full Clone</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --sb-orange: #FF5500; --sb-blue: #3B82F6; }
+        :root { --sb-orange: #FF5500; --sb-blue: #3B82F6; --sb-bg: #F4F5F7; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body, html { height: 100%; font-family: -apple-system, system-ui, sans-serif; background: #f5f5f5; overflow: hidden; }
+        body, html { height: 100%; font-family: -apple-system, system-ui, sans-serif; background: var(--sb-bg); overflow: hidden; }
 
-        .view { display: none; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; overflow-y: auto; overflow-x: hidden; }
+        /* Navigation & View Manager */
+        .view { display: none; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; overflow-y: auto; overflow-x: hidden; padding-bottom: 100px; }
         .active { display: flex; flex-direction: column; }
 
         /* VIEW 1: HOME SCREEN (IMG_0017) */
-        #view-home-screen { background: #1c1c1e; justify-content: center; align-items: center; }
+        #view-home-screen { background: #1c1c1e; justify-content: center; align-items: center; padding: 0; }
         .app-icon { width: 75px; height: 75px; background: white; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); cursor: pointer; }
         .s-logo { color: var(--sb-orange); font-size: 45px; font-weight: 800; line-height: 0.8; }
         .waves { width: 35px; height: 5px; background: var(--sb-blue); border-radius: 10px; margin-top: 2px; }
 
         /* VIEW 2: FACE ID (IMG_0018) */
-        #view-faceid { background: white; justify-content: center; align-items: center; }
+        #view-faceid { background: white; justify-content: center; align-items: center; padding: 0; }
         .faceid-box { position: relative; width: 120px; height: 120px; margin-top: -100px; }
         .ring { width: 100%; height: 100%; border: 6px solid #f3f3f3; border-top: 6px solid #32d74b; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         .face-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: #32d74b; }
 
         /* VIEW 3: DASHBOARD (IMG_0016) */
-        #view-dashboard { background: #f8f8f8; display: none; }
-        header { padding: 50px 20px 10px; display: flex; justify-content: space-between; align-items: center; background: white; }
-        .avatar { width: 40px; height: 40px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+        header { padding: 55px 20px 15px; display: flex; justify-content: space-between; align-items: center; background: white; }
+        .avatar { width: 42px; height: 42px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
         
-        .orange-card { background: linear-gradient(135deg, #FF8000, #FF5500); margin: 15px; padding: 20px; border-radius: 15px; color: white; cursor: pointer; }
-        .main-balance { font-size: 28px; font-weight: bold; margin: 10px 0 20px; }
-        
-        .menu-grid { background: white; margin: 15px; padding: 20px; border-radius: 15px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 10px; }
-        .menu-item { text-align: center; font-size: 11px; color: #555; }
-        .menu-item i { font-size: 22px; color: var(--sb-orange); margin-bottom: 8px; display: block; }
+        /* Kartu Saldo */
+        .orange-card { background: linear-gradient(135deg, #FF8000, #FF5500); margin: 15px; padding: 20px; border-radius: 15px; color: white; box-shadow: 0 4px 12px rgba(255,85,0,0.15); }
+        .main-balance { font-size: 26px; font-weight: bold; margin: 12px 0 18px; }
 
-        /* Banner Pinjaman (IMG_0016) */
-        .promo-banner { background: white; margin: 15px; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .promo-text h4 { font-size: 14px; margin-bottom: 5px; }
-        .promo-text p { font-size: 11px; color: #888; }
-        .promo-text h2 { font-size: 18px; color: #333; margin: 5px 0; }
-        .ajukan-btn { background: var(--sb-orange); color: white; padding: 8px 15px; border-radius: 5px; font-weight: bold; border: none; }
+        /* Menu Grid 8 Item (IMG_0016) */
+        .menu-grid { background: white; margin: 0 15px 15px; padding: 20px 10px; border-radius: 15px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 5px; }
+        .menu-item { text-align: center; font-size: 11px; color: #444; }
+        .menu-item i { font-size: 24px; color: var(--sb-orange); margin-bottom: 8px; display: block; }
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0 25px; border-top: 1px solid #eee; }
+        /* Deposito Flash Deals (IMG_0020) */
+        .flash-deals-section { background: #FFF5E9; margin: 0 15px 15px; padding: 15px; border-radius: 15px; border: 1px solid #FFE0B2; }
+        .flash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .flash-title { color: #333; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .flash-scroll { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 5px; scrollbar-width: none; }
+        .flash-scroll::-webkit-scrollbar { display: none; }
+        .flash-card { background: white; min-width: 140px; padding: 12px; border-radius: 12px; position: relative; }
+        .card-rate { color: var(--sb-orange); font-size: 18px; font-weight: bold; }
+        .card-sub { color: #999; font-size: 10px; margin-bottom: 10px; }
+        .progress-bar { height: 4px; background: #eee; border-radius: 5px; overflow: hidden; }
+        .progress-fill { width: 70%; height: 100%; background: #ddd; }
+
+        /* Banner SeaBank Pinjam (IMG_0016) */
+        .pinjam-banner { background: white; margin: 0 15px 15px; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .pinjam-btn { background: var(--sb-orange); color: white; padding: 8px 18px; border-radius: 8px; font-weight: bold; border: none; font-size: 14px; }
+
+        /* Banner Zakat/Donasi (IMG_0016) */
+        .zakat-banner { margin: 0 15px 15px; border-radius: 15px; overflow: hidden; position: relative; height: 150px; background: #0066FF; color: white; padding: 20px; }
+        .zakat-content h3 { font-size: 18px; margin-bottom: 10px; max-width: 60%; line-height: 1.2; }
+        .zakat-img { position: absolute; right: 0; bottom: 0; width: 160px; pointer-events: none; }
+
+        /* Navigation Bawah */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0 30px; border-top: 1px solid #eee; z-index: 100; }
         .nav-link { text-align: center; color: #999; font-size: 10px; }
         .nav-link.active { color: var(--sb-orange); }
-        .qris-btn { width: 50px; height: 50px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-top: -25px; }
+        .qris-btn { width: 52px; height: 52px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-top: -28px; box-shadow: 0 4px 12px rgba(255,85,0,0.3); font-size: 24px; }
     </style>
 </head>
 <body>
@@ -62,7 +79,7 @@
             <span class="s-logo">S</span>
             <div class="waves"></div>
         </div>
-        <p style="color:white; margin-top:15px; font-size:13px;">SeaBank</p>
+        <p style="color:white; margin-top:15px; font-size:13px; font-weight:500;">SeaBank</p>
     </div>
 
     <div id="view-faceid" class="view">
@@ -71,63 +88,102 @@
             <div class="face-icon"><i class="fa-solid fa-face-smile"></i></div>
         </div>
         <div style="position:absolute; bottom:80px; text-align:center;">
-            <p style="color:var(--sb-orange); font-size:22px; font-weight:bold;">SeaBank</p>
+            <p style="color:var(--sb-orange); font-size:24px; font-weight:bold;">SeaBank</p>
         </div>
     </div>
 
     <div id="view-dashboard" class="view">
         <header>
-            <div style="display:flex; align-items:center; gap:10px;">
+            <div style="display:flex; align-items:center; gap:12px;">
                 <div class="avatar"><i class="fa-solid fa-user"></i></div>
                 <div>
-                    <p style="font-weight:bold; font-size:14px;">Hartono Indra Djaja</p>
-                    <p style="font-size:11px; color:#888;">No. Rekening: 9014 3103 1500</p>
+                    <p style="font-weight:bold; font-size:15px;">Hartono Indra Djaja</p>
+                    <p style="font-size:11px; color:#888;">No. Rekening: 9014 3103 1500 <i class="fa-regular fa-copy"></i></p>
                 </div>
             </div>
-            <i class="fa-regular fa-bell" style="font-size:20px;"></i>
+            <i class="fa-regular fa-bell" style="font-size:22px;"></i>
         </header>
 
         <div class="orange-card" id="balance-card">
-            <div style="display:flex; justify-content:space-between; font-size:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; opacity:0.9;">
                 <span>Total Saldo <i id="eye-icon" class="fa-regular fa-eye-slash"></i></span>
-                <span>Riwayat ></span>
+                <span style="background:rgba(255,255,255,0.2); padding:3px 10px; border-radius:12px;">Riwayat ></span>
             </div>
             <div class="main-balance" id="val-main">Rp ******</div>
             <div style="display:grid; grid-template-columns:1fr 1fr; font-size:12px;">
                 <div>
-                    <p>Tabungan ></p>
-                    <p id="val-sub1" style="font-weight:bold;">Rp ****</p>
+                    <p style="opacity:0.8; margin-bottom:4px;">Tabungan ></p>
+                    <p id="val-sub1" style="font-weight:bold; font-size:14px;">Rp ****</p>
+                    <p style="font-size:10px; opacity:0.7;">2,5% p.a. cair harian</p>
                 </div>
                 <div>
-                    <p>Deposito ></p>
-                    <p id="val-sub2" style="font-weight:bold;">Rp ****</p>
+                    <p style="opacity:0.8; margin-bottom:4px;">Deposito ></p>
+                    <p id="val-sub2" style="font-weight:bold; font-size:14px;">Rp ****</p>
+                    <p style="font-size:10px; opacity:0.7;">Hingga 6% p.a.</p>
                 </div>
             </div>
         </div>
 
         <div class="menu-grid">
-            <div class="menu-item"><i class="fa-solid fa-money-bill-transfer"></i>Transfer</div>
+            <div class="menu-item"><i class="fa-solid fa-paper-plane"></i>Transfer</div>
             <div class="menu-item"><i class="fa-solid fa-file-invoice-dollar"></i>Top Up</div>
             <div class="menu-item"><i class="fa-solid fa-wallet"></i>E-Wallet</div>
             <div class="menu-item"><i class="fa-solid fa-user-plus"></i>Undang</div>
+            <div class="menu-item"><i class="fa-solid fa-piggy-bank"></i>Deposito</div>
+            <div class="menu-item"><i class="fa-solid fa-money-bill-transfer"></i>Tarik Tunai</div>
+            <div class="menu-item"><i class="fa-solid fa-hand-holding-dollar"></i>Pinjam</div>
+            <div class="menu-item"><i class="fa-solid fa-ellipsis"></i>Lainnya</div>
         </div>
 
-        <div class="promo-banner">
-            <div class="promo-text">
-                <h4>SeaBank Pinjam</h4>
-                <p>Dapatkan limit hingga</p>
-                <h2>Rp 30.000.000</h2>
-                <p style="color:var(--sb-blue);">Pencairan Instan • Bebas Biaya</p>
+        <div class="flash-deals-section">
+            <div class="flash-header">
+                <div class="flash-title"><i class="fa-solid fa-clock-rotate-left" style="color:var(--sb-orange)"></i> Deposito Flash Deals</div>
+                <i class="fa-solid fa-chevron-up" style="font-size:12px; color:#999;"></i>
             </div>
-            <button class="ajukan-btn">Ajukan</button>
+            <p style="font-size:11px; color:#666; margin-bottom:12px;">Total <span style="color:var(--sb-orange); font-weight:bold;">Rp 120 miliar</span> telah ditempatkan.</p>
+            <div class="flash-scroll">
+                <div class="flash-card">
+                    <p style="font-size:11px; font-weight:bold;">12 bulan</p>
+                    <p class="card-rate">7% p.a.</p>
+                    <p class="card-sub"><s>6% p.a.</s></p>
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
+                </div>
+                <div class="flash-card">
+                    <p style="font-size:11px; font-weight:bold;">6 bulan</p>
+                    <p class="card-rate">6% p.a.</p>
+                    <p class="card-sub"><s>5,25% p.a.</s></p>
+                    <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+                </div>
+            </div>
+            <p style="font-size:10px; color:var(--sb-orange); margin-top:10px; text-align:center;">Mulai Setiap Kamis pk. 19.00 WIB</p>
         </div>
+
+        <div class="pinjam-banner">
+            <div>
+                <p style="font-weight:bold; font-size:14px;">SeaBank Pinjam</p>
+                <p style="font-size:11px; color:#888; margin:4px 0;">Limit hingga</p>
+                <p style="font-size:18px; font-weight:bold;">Rp 30.000.000</p>
+            </div>
+            <button class="pinjam-btn">Ajukan</button>
+        </div>
+
+        <div class="zakat-banner">
+            <div class="zakat-content">
+                <p style="font-size:11px; font-weight:bold; opacity:0.8;">Makin Banyak Pilihan!</p>
+                <h3>Bayar Zakat & Donasi</h3>
+                <div style="background:white; color:#0066FF; display:inline-block; padding:4px 10px; border-radius:20px; font-size:10px; font-weight:bold;">Cek Sekarang</div>
+            </div>
+            <img src="https://rumah-yatim.org/wp-content/uploads/2021/01/logo-ry-white.png" class="zakat-img" style="width:80px; bottom:20px; right:20px; opacity:0.5;">
+        </div>
+
+        <div style="height:20px;"></div>
 
         <nav class="bottom-nav">
-            <div class="nav-link active"><i class="fa-solid fa-house"></i>Beranda</div>
-            <div class="nav-link"><i class="fa-solid fa-arrow-right-arrow-left"></i>Transfer</div>
+            <div class="nav-link active"><i class="fa-solid fa-house" style="font-size:20px; margin-bottom:4px; display:block;"></i>Beranda</div>
+            <div class="nav-link"><i class="fa-solid fa-right-left" style="font-size:20px; margin-bottom:4px; display:block;"></i>Transfer</div>
             <div class="qris-btn"><i class="fa-solid fa-qrcode"></i></div>
-            <div class="nav-link"><i class="fa-solid fa-sack-dollar"></i>Deposito</div>
-            <div class="nav-link"><i class="fa-solid fa-user"></i>Saya</div>
+            <div class="nav-link"><i class="fa-solid fa-sack-dollar" style="font-size:20px; margin-bottom:4px; display:block;"></i>Deposito</div>
+            <div class="nav-link"><i class="fa-solid fa-user" style="font-size:20px; margin-bottom:4px; display:block;"></i>Saya</div>
         </nav>
     </div>
 
@@ -167,4 +223,5 @@
         });
     </script>
 </body>
+</html>
 </html>
