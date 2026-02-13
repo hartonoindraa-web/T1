@@ -2,67 +2,84 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SeaBank Clone</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #ffffff;
-            font-family: sans-serif;
+        body, html { margin: 0; padding: 0; height: 100%; font-family: sans-serif; background-color: #1c1c1e; overflow: hidden; }
+        
+        /* TAMPILAN GAMBAR 1: IKON APLIKASI */
+        #home-screen {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;
+            background: url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1000') center/cover; /* Background ala iPhone */
         }
-        .logo-container {
-            text-align: center;
+        .app-icon-wrapper { text-align: center; cursor: pointer; }
+        .app-icon {
+            width: 72px; height: 72px; background: white; border-radius: 16px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden;
         }
-        /* Menggunakan CSS murni untuk logo S agar tidak perlu upload gambar */
-        .logo-circle {
-            width: 80px;
-            height: 80px;
-            background-color: #FF5500;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 10px;
-            border: 4px solid #fff;
-            box-shadow: 0 0 0 2px #FF5500; /* Efek ring luar */
+        .app-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .app-label { color: white; margin-top: 8px; font-size: 12px; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+
+        /* TAMPILAN GAMBAR 2: FACE ID PALSU */
+        #face-id-screen {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: white; flex-direction: column; align-items: center; justify-content: center; z-index: 100;
         }
-        .logo-text {
-            color: white;
-            font-size: 50px;
-            font-weight: bold;
+        .faceid-container { position: relative; width: 100px; height: 100px; }
+        /* Animasi Garis Hijau Berputar */
+        .faceid-ring {
+            width: 100%; height: 100%; border: 4px solid #f0f0f0; border-top: 4px solid #32d74b;
+            border-radius: 50%; animation: spin 1s linear infinite;
         }
-        .brand-name {
-            color: #FF5500;
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 1px;
+        .faceid-icon {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 40px; color: #32d74b;
         }
-        .wave-decoration {
-            width: 60px;
-            height: 10px;
-            background: #3B82F6;
-            margin: 5px auto;
-            border-radius: 10px;
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .seabank-logo-small { margin-top: 50px; width: 120px; }
     </style>
-    <script>
-        setTimeout(function(){
-           window.location.href = 'index.html';
-        }, 3000);
-    </script>
 </head>
 <body>
-    <div class="logo-container">
-        <div class="logo-circle">
-            <span class="logo-text">S</span>
+
+    <div id="home-screen">
+        <div class="app-icon-wrapper" onclick="startFaceID()">
+            <div class="app-icon">
+                <div style="background:#FF5500; width:100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+                    <span style="color:white; font-size:40px; font-weight:bold;">S</span>
+                    <div style="width:30px; height:4px; background:#3B82F6; border-radius:5px;"></div>
+                </div>
+            </div>
+            <div class="app-label">SeaBank</div>
         </div>
-        <div class="wave-decoration"></div>
-        <div class="brand-name">MyBank</div>
+        <p style="color:white; position:absolute; bottom:50px; font-size:12px; opacity:0.7;">Klik Ikon untuk Membuka</p>
     </div>
+
+    <div id="face-id-screen">
+        <div class="faceid-container">
+            <div class="faceid-ring"></div>
+            <div class="faceid-icon"><i class="fa-solid fa-face-smile"></i></div>
+        </div>
+        <div style="margin-top: 20px; color: #32d74b; font-weight: bold;">Face ID</div>
+        
+        <div style="position: absolute; bottom: 100px; text-align:center;">
+             <span style="color:#FF5500; font-size:24px; font-weight:bold;">SeaBank</span>
+        </div>
+    </div>
+
+    <script>
+        function startFaceID() {
+            // Sembunyikan home screen, tampilkan Face ID
+            document.getElementById('home-screen').style.display = 'none';
+            document.getElementById('face-id-screen').style.display = 'flex';
+
+            // Simulasi proses scanning 2 detik lalu pindah ke beranda (Gambar 3)
+            setTimeout(function(){
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
