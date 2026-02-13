@@ -3,98 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SeaBank</title>
+    <title>SeaBank App</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="SeaBank">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body, html { margin: 0; padding: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, sans-serif; background-color: #ffffff; overflow: hidden; }
-
-        /* SCREEN 1: IKON (MIMIC GAMBAR 1) */
-        #home-screen {
-            display: flex; justify-content: center; align-items: center; height: 100%;
-            background: #1c1c1e; /* Warna gelap ala background iPhone */
+        body, html { 
+            margin: 0; padding: 0; height: 100%; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000; overflow: hidden; 
         }
-        .app-container { text-align: center; }
-        .app-icon {
-            width: 76px; height: 76px; background: white; border-radius: 18px;
+
+        /* SCREEN 1: SIMULASI HOME SCREEN IPHONE (Gambar 1) */
+        #screen-1 {
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            height: 100vh; width: 100vw;
+            background: linear-gradient(to bottom, #2c3e50, #000000); /* Background ala wallpaper iPhone */
+            transition: opacity 0.5s ease;
+        }
+
+        .icon-wrapper { text-align: center; cursor: pointer; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        .app-box {
+            width: 75px; height: 75px; background: white; border-radius: 18px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5); margin-bottom: 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
-        .logo-s { color: #FF5500; font-size: 45px; font-weight: bold; line-height: 1; }
-        .logo-wave { width: 35px; height: 5px; background: #3B82F6; border-radius: 10px; margin-top: -2px; }
-        .app-label { color: white; font-size: 13px; font-weight: 400; }
+        .s-logo { color: #FF5500; font-size: 45px; font-weight: 800; line-height: 0.8; }
+        .waves { width: 35px; height: 5px; background: #3B82F6; border-radius: 10px; margin-top: 2px; }
+        .app-text { color: white; margin-top: 10px; font-size: 13px; font-weight: 400; }
 
-        /* SCREEN 2: FACE ID (MIMIC GAMBAR 2) */
-        #face-id-screen {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: white; flex-direction: column; align-items: center; z-index: 100;
+        /* SCREEN 2: SCANNING FACE ID (Gambar 2) */
+        #screen-2 {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: white; flex-direction: column; align-items: center; z-index: 99;
         }
-        .faceid-wrapper { margin-top: 40vh; position: relative; width: 110px; height: 110px; }
-        .ring {
-            width: 100%; height: 100%; border: 5px solid #e5e5e5; border-top: 5px solid #32d74b;
-            border-radius: 50%; animation: rotate 1.2s linear infinite;
+
+        .faceid-container { margin-top: 35vh; position: relative; width: 120px; height: 120px; }
+        .loader-ring {
+            width: 100%; height: 100%; border: 6px solid #f3f3f3;
+            border-top: 6px solid #32d74b; border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
         .face-icon {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 45px; color: #32d74b;
+            font-size: 50px; color: #32d74b;
         }
-        @keyframes rotate { 100% { transform: rotate(360deg); } }
-        
-        /* Logo SeaBank di bawah seperti Gambar 2 */
-        .bottom-branding {
-            position: absolute; bottom: 80px; text-align: center;
-        }
-        .bottom-branding .s-circle {
-            width: 35px; height: 35px; background: #FF5500; border-radius: 50%;
-            display: inline-flex; align-items: center; justify-content: center;
-            color: white; font-weight: bold; font-size: 20px;
-        }
-        .brand-text { color: #FF5500; font-size: 22px; font-weight: bold; margin-top: 5px; display: block; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Notif instruksi */
-        .tap-hint { position: absolute; bottom: 30px; color: #999; font-size: 12px; }
+        .bottom-logo {
+            position: absolute; bottom: 60px; text-align: center;
+        }
+        .orange-circle {
+            width: 40px; height: 40px; background: #FF5500; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; font-size: 22px;
+        }
+        .brand { color: #FF5500; font-size: 24px; font-weight: bold; margin-top: 8px; display: block; }
+        
+        .instruction { position: absolute; bottom: 30px; color: #bbb; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div id="home-screen" onclick="launchApp()">
-        <div class="app-container">
-            <div class="app-icon">
-                <span class="logo-s">S</span>
-                <div class="logo-wave"></div>
+    <div id="screen-1" onclick="goToFaceID()">
+        <div class="icon-wrapper">
+            <div class="app-box">
+                <span class="s-logo">S</span>
+                <div class="waves"></div>
             </div>
-            <div class="app-label">SeaBank</div>
+            <div class="app-text">SeaBank</div>
         </div>
-        <div class="tap-hint">Klik ikon untuk mulai</div>
+        <div class="instruction">Ketuk ikon untuk membuka</div>
     </div>
 
-    <div id="face-id-screen">
-        <div class="faceid-wrapper">
-            <div class="ring"></div>
+    <div id="screen-2">
+        <div class="faceid-container">
+            <div class="loader-ring"></div>
             <div class="face-icon"><i class="fa-solid fa-face-smile"></i></div>
         </div>
         
-        <div class="bottom-branding">
-            <div class="s-circle">S</div>
-            <div class="brand-text">SeaBank</div>
+        <div class="bottom-logo">
+            <div class="orange-circle">S</div>
+            <div class="brand">SeaBank</div>
         </div>
     </div>
 
     <script>
-        function launchApp() {
-            // Masuk ke Face ID
-            document.getElementById('home-screen').style.display = 'none';
-            document.getElementById('face-id-screen').style.display = 'flex';
-
-            // Setelah 2 detik "pencitraan" Face ID, masuk ke Beranda (Gambar 3)
-            setTimeout(function() {
-                window.location.href = 'index.html';
-            }, 2000);
+        function goToFaceID() {
+            // Efek transisi halus
+            document.getElementById('screen-1').style.opacity = '0';
+            
+            setTimeout(() => {
+                document.getElementById('screen-1').style.display = 'none';
+                document.getElementById('screen-2').style.display = 'flex';
+                
+                // Scanning selama 2.5 detik agar terasa nyata
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2500);
+            }, 500);
         }
     </script>
 </body>
