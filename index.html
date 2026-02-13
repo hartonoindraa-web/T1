@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SeaBank Full Clone</title>
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --sb-orange: #FF5500; --sb-blue: #3B82F6; --sb-bg: #F4F5F7; }
@@ -30,17 +32,37 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
         .face-icon { position: absolute; font-size: 55px; color: #32d74b; }
 
-        /* VIEW 3: DASHBOARD */
+        /* VIEW 3: DASHBOARD (LAYOUT LENGKAP) */
         header { padding: 55px 20px 15px; display: flex; justify-content: space-between; align-items: center; background: white; }
-        .avatar { width: 42px; height: 42px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
-        .orange-card { background: linear-gradient(135deg, #FF8000, #FF5500); margin: 15px; padding: 20px; border-radius: 15px; color: white; cursor: pointer; }
+        .avatar { width: 42px; height: 42px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+        
+        .orange-card { background: linear-gradient(135deg, #FF8000, #FF5500); margin: 15px; padding: 20px; border-radius: 15px; color: white; box-shadow: 0 4px 12px rgba(255,85,0,0.15); cursor: pointer; }
         .main-balance { font-size: 26px; font-weight: bold; margin: 12px 0 18px; }
-        .menu-grid { background: white; margin: 0 15px 15px; padding: 20px 10px; border-radius: 15px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 5px; }
-        .menu-item { text-align: center; font-size: 11px; color: #444; cursor: pointer; }
+
+        .menu-grid { background: white; margin: 0 15px 15px; padding: 20px 10px; border-radius: 15px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 5px; cursor: pointer; }
+        .menu-item { text-align: center; font-size: 11px; color: #444; }
         .menu-item i { font-size: 24px; color: var(--sb-orange); margin-bottom: 8px; display: block; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0 30px; border-top: 1px solid #eee; }
-        .nav-link { text-align: center; color: #999; font-size: 10px; flex:1; }
-        .qris-btn { width: 52px; height: 52px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-top: -28px; }
+
+        .flash-deals-section { background: #FFF5E9; margin: 0 15px 15px; padding: 15px; border-radius: 15px; border: 1px solid #FFE0B2; cursor: pointer; }
+        .flash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .flash-title { color: #333; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .flash-scroll { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 5px; scrollbar-width: none; }
+        .flash-card { background: white; min-width: 140px; padding: 12px; border-radius: 12px; }
+        .card-rate { color: var(--sb-orange); font-size: 18px; font-weight: bold; }
+        .card-sub { color: #999; font-size: 10px; margin-bottom: 10px; }
+        .progress-bar { height: 4px; background: #eee; border-radius: 5px; overflow: hidden; }
+        .progress-fill { width: 70%; height: 100%; background: #ddd; }
+
+        .pinjam-banner { background: white; margin: 0 15px 15px; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .pinjam-btn { background: var(--sb-orange); color: white; padding: 8px 18px; border-radius: 8px; font-weight: bold; border: none; font-size: 14px; }
+
+        .zakat-banner { margin: 0 15px 15px; border-radius: 15px; overflow: hidden; position: relative; height: 150px; background: #0066FF; color: white; padding: 20px; cursor: pointer; }
+        .zakat-content h3 { font-size: 18px; margin-bottom: 10px; max-width: 60%; line-height: 1.2; }
+        .zakat-img { position: absolute; right: 0; bottom: 0; width: 160px; pointer-events: none; }
+
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0 30px; border-top: 1px solid #eee; z-index: 100; cursor: pointer; }
+        .nav-link { text-align: center; color: #999; font-size: 10px; }
+        .qris-btn { width: 52px; height: 52px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-top: -28px; box-shadow: 0 4px 12px rgba(255,85,0,0.3); font-size: 24px; }
 
         /* MODAL PPATK */
         #modal-ppatk { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center; padding:30px; backdrop-filter: blur(4px); }
@@ -55,13 +77,16 @@
             <span class="s-logo">S</span>
             <div class="waves"></div>
         </div>
-        <p style="color:white; margin-top:15px; font-size:13px;">SeaBank</p>
+        <p style="color:white; margin-top:15px; font-size:13px; font-weight:500;">SeaBank</p>
     </div>
 
     <div id="view-faceid" class="view">
         <div class="faceid-box">
             <div class="ring" id="faceid-ring"></div>
             <div class="face-icon" id="faceid-icon"><i class="fa-solid fa-face-smile"></i></div>
+        </div>
+        <div style="position:absolute; bottom:80px; text-align:center;">
+            <p style="color:var(--sb-orange); font-size:24px; font-weight:bold;">SeaBank</p>
         </div>
     </div>
 
@@ -71,47 +96,95 @@
                 <div class="avatar"><i class="fa-solid fa-user"></i></div>
                 <div>
                     <p style="font-weight:bold; font-size:15px;">Hartono Indra Djaja</p>
-                    <p style="font-size:11px; color:#888;">No. Rekening: 9014 3103 1500</p>
+                    <p style="font-size:11px; color:#888;">No. Rekening: 9014 3103 1500 <i class="fa-regular fa-copy"></i></p>
                 </div>
             </div>
+            <i class="fa-regular fa-bell" style="font-size:22px;"></i>
         </header>
 
         <div class="orange-card" id="balance-card">
-            <div style="display:flex; justify-content:space-between; font-size:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; opacity:0.9;">
                 <span>Total Saldo <i id="eye-icon" class="fa-regular fa-eye-slash"></i></span>
-                <span>Riwayat ></span>
+                <span style="background:rgba(255,255,255,0.2); padding:3px 10px; border-radius:12px;">Riwayat ></span>
             </div>
             <div class="main-balance" id="val-main">Rp ******</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; font-size:12px;">
+                <div>
+                    <p style="opacity:0.8; margin-bottom:4px;">Tabungan ></p>
+                    <p id="val-sub1" style="font-weight:bold; font-size:14px;">Rp ****</p>
+                </div>
+                <div>
+                    <p style="opacity:0.8; margin-bottom:4px;">Deposito ></p>
+                    <p id="val-sub2" style="font-weight:bold; font-size:14px;">Rp ****</p>
+                </div>
+            </div>
         </div>
 
-        <div class="menu-grid" id="main-menu">
-            <div class="menu-item"><i class="fa-solid fa-paper-plane"></i>Transfer</div>
-            <div class="menu-item"><i class="fa-solid fa-file-invoice-dollar"></i>Top Up</div>
-            <div class="menu-item"><i class="fa-solid fa-wallet"></i>E-Wallet</div>
-            <div class="menu-item"><i class="fa-solid fa-user-plus"></i>Undang</div>
+        <div id="prank-trigger-area">
+            <div class="menu-grid">
+                <div class="menu-item"><i class="fa-solid fa-paper-plane"></i>Transfer</div>
+                <div class="menu-item"><i class="fa-solid fa-file-invoice-dollar"></i>Top Up</div>
+                <div class="menu-item"><i class="fa-solid fa-wallet"></i>E-Wallet</div>
+                <div class="menu-item"><i class="fa-solid fa-user-plus"></i>Undang</div>
+                <div class="menu-item"><i class="fa-solid fa-piggy-bank"></i>Deposito</div>
+                <div class="menu-item"><i class="fa-solid fa-money-bill-transfer"></i>Tarik Tunai</div>
+                <div class="menu-item"><i class="fa-solid fa-hand-holding-dollar"></i>Pinjam</div>
+                <div class="menu-item"><i class="fa-solid fa-ellipsis"></i>Lainnya</div>
+            </div>
+
+            <div class="flash-deals-section">
+                <div class="flash-header">
+                    <div class="flash-title"><i class="fa-solid fa-clock-rotate-left" style="color:var(--sb-orange)"></i> Deposito Flash Deals</div>
+                </div>
+                <div class="flash-scroll">
+                    <div class="flash-card">
+                        <p style="font-size:11px; font-weight:bold;">12 bulan</p>
+                        <p class="card-rate">7% p.a.</p>
+                        <div class="progress-bar"><div class="progress-fill"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pinjam-banner">
+                <div>
+                    <p style="font-weight:bold; font-size:14px;">SeaBank Pinjam</p>
+                    <p style="font-size:18px; font-weight:bold;">Rp 30.000.000</p>
+                </div>
+                <button class="pinjam-btn">Ajukan</button>
+            </div>
+
+            <div class="zakat-banner">
+                <div class="zakat-content">
+                    <h3>Bayar Zakat & Donasi</h3>
+                    <div style="background:white; color:#0066FF; display:inline-block; padding:4px 10px; border-radius:20px; font-size:10px; font-weight:bold;">Cek Sekarang</div>
+                </div>
+            </div>
         </div>
 
         <nav class="bottom-nav" id="bottom-bar">
-            <div class="nav-link"><i class="fa-solid fa-house"></i><br>Beranda</div>
+            <div class="nav-link"><i class="fa-solid fa-house" style="font-size:20px; display:block;"></i>Beranda</div>
+            <div class="nav-link"><i class="fa-solid fa-right-left" style="font-size:20px; display:block;"></i>Transfer</div>
             <div class="qris-btn"><i class="fa-solid fa-qrcode"></i></div>
-            <div class="nav-link"><i class="fa-solid fa-user"></i><br>Saya</div>
+            <div class="nav-link"><i class="fa-solid fa-sack-dollar" style="font-size:20px; display:block;"></i>Deposito</div>
+            <div class="nav-link"><i class="fa-solid fa-user" style="font-size:20px; display:block;"></i>Saya</div>
         </nav>
     </div>
 
     <div id="modal-ppatk">
         <div class="modal-box">
             <i class="fa-solid fa-circle-exclamation" style="font-size:50px; color:#FF5500; margin-bottom:15px;"></i>
-            <h3 style="font-size:17px; margin-bottom:10px;">Pemberitahuan Sistem</h3>
+            <h3 style="font-size:17px; margin-bottom:10px; font-weight:bold;">Pemberitahuan Sistem</h3>
             <p style="font-size:12.5px; color:#555; text-align:left; line-height:1.5;">
                 Rekening anda sedang dalam tinjauan / <b>Under review</b> oleh pihak Seabank dan PPATK diakibatkan oleh transaksi dalam 60 hari kebelakang. <br><br>
-                Untuk sementara akun tidak akan bisa dipergunakan. Saldo kamu tetap aman di SeaBank!
+                Untuk sementara akun tidak akan bisa dipergunakan sampai proses yang berjalan selesai. Terimakasih.<br><br>
+                <i>Dan jangan khawatir! Saldo kamu akan tetap aman kok di SeaBank!</i>
             </p>
             <button onclick="closeModal()" style="margin-top:20px; width:100%; background:#FF5500; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold;">Dimengerti</button>
         </div>
     </div>
 
     <script>
-        // 1. Logika Pindah ke FaceID
+        // Logika Pindah View
         document.getElementById('btn-start').onclick = function() {
             document.getElementById('view-home-screen').classList.remove('active');
             document.getElementById('view-faceid').classList.add('active');
@@ -127,25 +200,28 @@
             }, 2200);
         };
 
-        // 2. Logika Toggle Saldo (Aman, Tidak memicu Pop-up)
+        // Logika Toggle Saldo (Aman dari Pop-up)
         let visible = false;
         document.getElementById('balance-card').onclick = function(e) {
             e.stopPropagation();
             visible = !visible;
             document.getElementById('val-main').innerText = visible ? "Rp 102.722.850" : "Rp ******";
+            document.getElementById('val-sub1').innerText = visible ? "Rp 102.722.850" : "Rp ****";
+            document.getElementById('val-sub2').innerText = visible ? "Rp 0" : "Rp ****";
             document.getElementById('eye-icon').className = visible ? "fa-regular fa-eye" : "fa-regular fa-eye-slash";
         };
 
-        // 3. Logika Pop-up Prank (Untuk area Dashboard)
+        // Logika Prank
         function showWarning() {
             document.getElementById('modal-ppatk').style.display = 'flex';
+            if (navigator.vibrate) navigator.vibrate(200);
         }
         function closeModal() {
             document.getElementById('modal-ppatk').style.display = 'none';
         }
 
-        // Memicu pop-up hanya jika klik menu atau bottom nav
-        document.getElementById('main-menu').onclick = showWarning;
+        // Area yang memicu prank
+        document.getElementById('prank-trigger-area').onclick = showWarning;
         document.getElementById('bottom-bar').onclick = showWarning;
     </script>
 </body>
