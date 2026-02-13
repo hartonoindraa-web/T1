@@ -4,65 +4,71 @@
     <link rel="apple-touch-icon" href="IMG_0022.jpeg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SeaBank Full Clone</title>
+    <title>SeaBank Pro - Face ID Opsi 1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --sb-orange: #FF5500; --sb-blue: #3B82F6; --sb-bg: #F4F5F7; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body, html { height: 100%; font-family: -apple-system, system-ui, sans-serif; background: var(--sb-bg); overflow: hidden; }
 
-        .view { display: none; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; overflow-y: auto; overflow-x: hidden; padding-bottom: 100px; }
+    <style>
+        :root { --sb-orange: #FF5500; --sb-blue: #3B82F6; --sb-bg: #F4F5F7; --ios-green: #32d74b; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        body, html { height: 100%; font-family: -apple-system, system-ui, sans-serif; background: #000; overflow: hidden; }
+
+        /* View Manager */
+        .view { display: none; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; overflow-y: auto; overflow-x: hidden; }
         .active { display: flex; flex-direction: column; }
 
-        /* VIEW 1: HOME SCREEN */
+        /* --- SCREEN 1: APP ICON --- */
         #view-home-screen { background: #1c1c1e; justify-content: center; align-items: center; }
         .app-icon { width: 75px; height: 75px; background: white; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); cursor: pointer; }
         .s-logo { color: var(--sb-orange); font-size: 45px; font-weight: 800; line-height: 0.8; }
         .waves { width: 35px; height: 5px; background: var(--sb-blue); border-radius: 10px; margin-top: 2px; }
 
-        /* VIEW 2: REALISTIC 3D FACE ID ANIMATION */
+        /* --- SCREEN 2: FACE ID OPSI 1 (DIGITAL MESH) --- */
         #view-faceid { background: #000; justify-content: center; align-items: center; }
-        .faceid-container { position: relative; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; perspective: 500px; }
         
-        /* Objek Orbital Berputar */
-        .faceid-orbit { position: absolute; width: 100%; height: 100%; border: 2px solid rgba(50, 215, 75, 0.3); border-radius: 50%; transform-style: preserve-3d; animation: orbitRotate 2s linear infinite; }
-        .faceid-orbit::before { content: ''; position: absolute; inset: -5px; border: 4px solid #32d74b; border-radius: 50%; filter: blur(4px); opacity: 0.7; }
+        .faceid-wrapper { position: relative; width: 200px; height: 200px; display: flex; align-items: center; justify-content: center; }
         
-        .orbit-inner { position: absolute; width: 80%; height: 80%; border: 2px solid #32d74b; border-radius: 50%; animation: orbitRotateInner 1.5s linear infinite reverse; }
+        /* Animasi Orbit Garis Halus (Mirip Video) */
+        .mesh-container { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; perspective: 1000px; animation: globalRotate 4s linear infinite; }
+        
+        .line { position: absolute; top: 50%; left: 50%; width: 140px; height: 140px; border: 1.5px solid var(--ios-green); border-radius: 50%; transform: translate(-50%, -50%); opacity: 0.4; filter: blur(1px); }
+        .line:nth-child(1) { transform: translate(-50%, -50%) rotateX(70deg) rotateY(0deg); }
+        .line:nth-child(2) { transform: translate(-50%, -50%) rotateX(70deg) rotateY(60deg); }
+        .line:nth-child(3) { transform: translate(-50%, -50%) rotateX(70deg) rotateY(120deg); }
+        
+        /* Cahaya Pendar di Tengah */
+        .core-glow { position: absolute; width: 60px; height: 60px; background: var(--ios-green); border-radius: 50%; filter: blur(30px); opacity: 0.5; animation: pulseGlow 1.5s ease-in-out infinite; }
 
-        @keyframes orbitRotate {
-            0% { transform: rotateX(45deg) rotateY(0deg) rotateZ(0deg); }
-            100% { transform: rotateX(45deg) rotateY(360deg) rotateZ(360deg); }
+        .face-status-text { color: white; margin-top: 50px; font-size: 18px; font-weight: 400; opacity: 0.8; letter-spacing: 0.5px; }
+
+        @keyframes globalRotate {
+            0% { transform: rotateZ(0deg) rotateY(0deg); }
+            100% { transform: rotateZ(360deg) rotateY(360deg); }
         }
-        @keyframes orbitRotateInner {
-            0% { transform: rotateX(-45deg) rotateY(0deg); }
-            100% { transform: rotateX(-45deg) rotateY(360deg); }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.3); opacity: 0.7; }
         }
 
-        .face-icon-real { position: absolute; font-size: 50px; color: #32d74b; text-shadow: 0 0 15px rgba(50, 215, 75, 0.8); z-index: 10; transition: all 0.5s ease; }
-
-        /* Dashboard Styles */
+        /* --- SCREEN 3: DASHBOARD --- */
+        #view-dashboard { background: var(--sb-bg); padding-bottom: 100px; }
         header { padding: 55px 20px 15px; display: flex; justify-content: space-between; align-items: center; background: white; }
         .avatar { width: 42px; height: 42px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
-        .orange-card { background: linear-gradient(135deg, #FF8000, #FF5500); margin: 15px; padding: 20px; border-radius: 15px; color: white; box-shadow: 0 4px 12px rgba(255,85,0,0.15); }
+        .orange-card { background: linear-gradient(135deg, #FF8000, #FF5500); margin: 15px; padding: 20px; border-radius: 15px; color: white; }
         .main-balance { font-size: 26px; font-weight: bold; margin: 12px 0 18px; }
         .menu-grid { background: white; margin: 0 15px 15px; padding: 20px 10px; border-radius: 15px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 5px; }
         .menu-item { text-align: center; font-size: 11px; color: #444; }
         .menu-item i { font-size: 24px; color: var(--sb-orange); margin-bottom: 8px; display: block; }
+        
         .flash-deals-section { background: #FFF5E9; margin: 0 15px 15px; padding: 15px; border-radius: 15px; border: 1px solid #FFE0B2; }
-        .flash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .flash-scroll { display: flex; overflow-x: auto; gap: 12px; scrollbar-width: none; }
         .flash-card { background: white; min-width: 140px; padding: 12px; border-radius: 12px; }
         .card-rate { color: var(--sb-orange); font-size: 18px; font-weight: bold; }
-        .progress-bar { height: 4px; background: #eee; border-radius: 5px; overflow: hidden; }
-        .progress-fill { width: 70%; height: 100%; background: #ddd; }
-        .pinjam-banner { background: white; margin: 0 15px 15px; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .pinjam-btn { background: var(--sb-orange); color: white; padding: 8px 18px; border-radius: 8px; font-weight: bold; border: none; }
+
         .zakat-banner { margin: 0 15px 15px; border-radius: 15px; overflow: hidden; position: relative; height: 140px; background: #0066FF; color: white; padding: 20px; }
+
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0 30px; border-top: 1px solid #eee; z-index: 100; }
         .nav-link { text-align: center; color: #999; font-size: 10px; }
         .nav-link.active { color: var(--sb-orange); }
@@ -80,12 +86,16 @@
     </div>
 
     <div id="view-faceid" class="view">
-        <div class="faceid-container">
-            <div class="faceid-orbit" id="orbit1"></div>
-            <div class="orbit-inner" id="orbit2"></div>
-            <div class="face-icon-real" id="face-main"><i class="fa-solid fa-face-smile"></i></div>
+        <div class="faceid-wrapper">
+            <div class="core-glow"></div>
+            <div class="mesh-container" id="mesh">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+            <i class="fa-solid fa-circle-check" id="success-icon" style="position:absolute; color:var(--ios-green); font-size:60px; display:none;"></i>
         </div>
-        <p id="face-status" style="color: #32d74b; margin-top: 40px; font-weight: 500; letter-spacing: 1px;">Face ID</p>
+        <p class="face-status-text" id="status-text">Face ID</p>
     </div>
 
     <div id="view-dashboard" class="view">
@@ -132,64 +142,54 @@
         </div>
 
         <div class="flash-deals-section">
-            <div class="flash-header">
-                <div class="flash-title"><i class="fa-solid fa-clock-rotate-left" style="color:var(--sb-orange)"></i> Deposito Flash Deals</div>
-            </div>
+            <div class="flash-header"><p style="font-weight:bold; font-size:14px;">Deposito Flash Deals</p></div>
             <div class="flash-scroll">
-                <div class="flash-card">
-                    <p style="font-size:11px; font-weight:bold;">12 bulan</p>
-                    <p class="card-rate">7% p.a.</p>
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
-                </div>
-                <div class="flash-card">
-                    <p style="font-size:11px; font-weight:bold;">6 bulan</p>
-                    <p class="card-rate">6% p.a.</p>
-                    <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
-                </div>
+                <div class="flash-card"><p class="card-rate">7% p.a.</p><p style="font-size:10px;">12 Bulan</p></div>
+                <div class="flash-card"><p class="card-rate">6% p.a.</p><p style="font-size:10px;">6 Bulan</p></div>
             </div>
         </div>
 
         <div class="zakat-banner">
             <p style="font-size:11px; font-weight:bold; opacity:0.8;">Makin Banyak Pilihan!</p>
-            <h3 style="font-size:18px; margin: 10px 0;">Bayar Zakat & Donasi</h3>
+            <h3 style="font-size:18px; margin: 8px 0;">Bayar Zakat & Donasi</h3>
             <div style="background:white; color:#0066FF; display:inline-block; padding:4px 12px; border-radius:20px; font-size:10px; font-weight:bold;">Cek Sekarang</div>
         </div>
 
         <nav class="bottom-nav">
-            <div class="nav-link active"><i class="fa-solid fa-house" style="font-size:20px; margin-bottom:4px; display:block;"></i>Beranda</div>
-            <div class="nav-link"><i class="fa-solid fa-right-left" style="font-size:20px; margin-bottom:4px; display:block;"></i>Transfer</div>
+            <div class="nav-link active"><i class="fa-solid fa-house" style="font-size:20px;"></i><br>Beranda</div>
+            <div class="nav-link"><i class="fa-solid fa-right-left" style="font-size:20px;"></i><br>Transfer</div>
             <div class="qris-btn"><i class="fa-solid fa-qrcode"></i></div>
-            <div class="nav-link"><i class="fa-solid fa-sack-dollar" style="font-size:20px; margin-bottom:4px; display:block;"></i>Deposito</div>
-            <div class="nav-link"><i class="fa-solid fa-user" style="font-size:20px; margin-bottom:4px; display:block;"></i>Saya</div>
+            <div class="nav-link"><i class="fa-solid fa-sack-dollar" style="font-size:20px;"></i><br>Deposito</div>
+            <div class="nav-link"><i class="fa-solid fa-user" style="font-size:20px;"></i><br>Saya</div>
         </nav>
     </div>
 
     <script>
+        // Logika Transisi Face ID
         document.getElementById('btn-start').addEventListener('click', function() {
             document.getElementById('view-home-screen').style.display = 'none';
             document.getElementById('view-faceid').style.display = 'flex';
             
-            // Animasi Transisi Face ID
+            const mesh = document.getElementById('mesh');
+            const successIcon = document.getElementById('success-icon');
+            const statusText = document.getElementById('status-text');
+
+            // Simulasi Berhasil (Setelah 2.5 Detik)
             setTimeout(() => {
-                const icon = document.getElementById('face-main').querySelector('i');
-                const orbit1 = document.getElementById('orbit1');
-                const orbit2 = document.getElementById('orbit2');
-                
-                // Berhenti Berputar & Tanda Berhasil
-                orbit1.style.animation = "none";
-                orbit2.style.animation = "none";
-                orbit1.style.border = "4px solid #32d74b";
-                orbit2.style.border = "4px solid #32d74b";
-                icon.classList.replace('fa-face-smile', 'fa-circle-check');
-                icon.style.transform = "scale(1.2)";
+                mesh.style.display = 'none'; // Sembunyikan garis scan
+                successIcon.style.display = 'block'; // Tampilkan centang
+                statusText.innerText = "Berhasil!";
+                statusText.style.color = "#32d74b";
             }, 2500);
 
+            // Masuk Dashboard
             setTimeout(() => {
                 document.getElementById('view-faceid').style.display = 'none';
                 document.getElementById('view-dashboard').style.display = 'block';
-            }, 3200);
+            }, 3500);
         });
 
+        // Saldo Toggle
         let visible = false;
         document.getElementById('balance-card').addEventListener('click', function() {
             const m = document.getElementById('val-main');
