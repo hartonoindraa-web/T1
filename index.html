@@ -2,125 +2,147 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance App Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SeaBank</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SeaBank">
+    
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/seabank-icon.png"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --sb-orange: #FF5500; --sb-blue: #3B82F6; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        body, html { height: 100%; font-family: -apple-system, system-ui, sans-serif; background: #f5f5f5; overflow: hidden; }
+
+        /* Manager Tampilan */
+        .view { display: none; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; overflow-y: auto; }
+        .active { display: block; }
+
+        /* VIEW 1: SIMULASI HOME SCREEN (IMG_0017) */
+        #view-home-screen { background: #1c1c1e; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .app-icon { width: 75px; height: 75px; background: white; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); cursor: pointer; }
+        .s-logo { color: var(--sb-orange); font-size: 45px; font-weight: 800; line-height: 0.8; }
+        .waves { width: 35px; height: 5px; background: var(--sb-blue); border-radius: 10px; margin-top: 2px; }
+        .label { color: white; margin-top: 10px; font-size: 13px; }
+
+        /* VIEW 2: FACE ID SCANNING (IMG_0018) */
+        #view-faceid { background: white; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .faceid-box { position: relative; width: 120px; height: 120px; margin-top: -100px; }
+        .ring { width: 100%; height: 100%; border: 6px solid #f3f3f3; border-top: 6px solid #32d74b; border-radius: 50%; animation: spin 1s linear infinite; }
+        .face-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: #32d74b; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .bottom-brand { position: absolute; bottom: 80px; text-align: center; }
+        .brand-text { color: var(--sb-orange); font-size: 24px; font-weight: bold; }
+
+        /* VIEW 3: DASHBOARD (IMG_0016) */
+        #view-dashboard { background: #f8f8f8; }
+        header { padding: 50px 20px 10px; display: flex; justify-content: space-between; align-items: center; background: white; }
+        .user-profile { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+        
+        .orange-card { background: linear-gradient(135deg, #FF8000, #FF5500); margin: 15px; padding: 20px; border-radius: 15px; color: white; }
+        .balance-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
+        .main-balance { font-size: 28px; font-weight: bold; margin: 10px 0 20px; }
+        .sub-balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 13px; }
+
+        .menu-grid { background: white; margin: 15px; padding: 20px; border-radius: 15px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 10px; }
+        .menu-item { text-align: center; font-size: 11px; color: #555; }
+        .menu-item i { font-size: 22px; color: var(--sb-orange); margin-bottom: 8px; display: block; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0 25px; border-top: 1px solid #eee; }
+        .nav-link { text-align: center; color: #999; font-size: 10px; text-decoration: none; }
+        .nav-link.active { color: var(--sb-orange); }
+        .nav-link i { font-size: 20px; display: block; margin-bottom: 2px; }
+        .qris-btn { width: 50px; height: 50px; background: var(--sb-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-top: -25px; box-shadow: 0 4px 10px rgba(255,85,0,0.3); }
+    </style>
 </head>
 <body>
 
-    <div class="mobile-container">
-        <header class="top-header">
-            <div class="user-info">
-                <div class="avatar-circle">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-                <div class="user-text">
-                    <h3>Hartono Indra Djaja</h3>
-                    <p>No. Rekening: 9014 3103 1500 <i class="fa-regular fa-copy"></i></p>
+    <div id="view-home-screen" class="view active">
+        <div class="app-icon" onclick="startApp()">
+            <span class="s-logo">S</span>
+            <div class="waves"></div>
+        </div>
+        <div class="label">SeaBank</div>
+    </div>
+
+    <div id="view-faceid" class="view">
+        <div class="faceid-box">
+            <div class="ring"></div>
+            <div class="face-icon"><i class="fa-solid fa-face-smile"></i></div>
+        </div>
+        <div class="bottom-brand">
+            <div class="brand-text">SeaBank</div>
+        </div>
+    </div>
+
+    <div id="view-dashboard" class="view">
+        <header>
+            <div class="user-profile">
+                <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                <div>
+                    <div style="font-weight: bold; font-size: 14px;">Hartono Indra Djaja</div>
+                    <div style="font-size: 11px; color: #888;">No. Rekening: 9014 3103 1500 <i class="fa-regular fa-copy"></i></div>
                 </div>
             </div>
-            <div class="notification-icon">
-                <i class="fa-regular fa-bell"></i>
-            </div>
+            <i class="fa-regular fa-bell" style="font-size: 20px;"></i>
         </header>
 
-        <section class="balance-card">
-            <div class="top-row">
+        <div class="orange-card">
+            <div class="balance-row">
                 <span>Total Saldo <i class="fa-regular fa-eye-slash"></i></span>
-                <button class="history-btn">Riwayat <i class="fa-solid fa-chevron-right"></i></button>
+                <span style="background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 10px;">Riwayat ></span>
             </div>
-            <h1 class="main-balance">Rp ******</h1>
-            
-            <div class="sub-balance-row">
-                <div class="sub-balance">
-                    <span>Tabungan <i class="fa-solid fa-chevron-right"></i></span>
-                    <p>Rp ****</p>
-                    <small>2,5% p.a. cair harian</small>
+            <div class="main-balance">Rp ******</div>
+            <div class="sub-balance-grid">
+                <div>
+                    <div>Tabungan ></div>
+                    <div style="font-weight: bold;">Rp ****</div>
+                    <div style="font-size: 10px; opacity: 0.8;">2,5% p.a. cair harian</div>
                 </div>
-                <div class="sub-balance">
-                    <span>Deposito <i class="fa-solid fa-chevron-right"></i></span>
-                    <p>Rp **** <span class="badge">Buka Deposito</span></p>
-                    <small>Hingga 6% p.a.</small>
-                </div>
-            </div>
-        </section>
-
-        <section class="menu-grid">
-            <div class="menu-item">
-                <div class="icon-box orange-text"><i class="fa-solid fa-money-bill-transfer"></i></div>
-                <span>Transfer</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-box orange-text"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-                <span>Top Up & Tagihan</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-box orange-text"><i class="fa-solid fa-wallet"></i></div>
-                <span>Top Up E-Wallet</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-box orange-text"><i class="fa-solid fa-user-plus"></i></div>
-                <span>Undang Teman</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-box orange-text"><i class="fa-solid fa-sack-dollar"></i></div>
-                <span>Deposito</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-box orange-text"><i class="fa-solid fa-arrow-down"></i></div>
-                <span>Tarik Tunai</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-box orange-text"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-                <span>Pinjam</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-box orange-text"><i class="fa-solid fa-ellipsis"></i></div>
-                <span>Lihat Semua</span>
-            </div>
-        </section>
-
-        <section class="promo-banner">
-            <div class="promo-content">
-                <h3>Pinjaman Tunai</h3>
-                <p>Dapatkan limit hingga</p>
-                <h2>Rp 30.000.000</h2>
-                <div class="tags">
-                    <span>Pencairan Instan</span>
-                    <span>Bebas Biaya Admin</span>
+                <div>
+                    <div>Deposito ></div>
+                    <div style="font-weight: bold;">Rp **** <span style="background:white; color:var(--sb-orange); font-size:9px; padding:2px 4px; border-radius:4px;">Buka</span></div>
+                    <div style="font-size: 10px; opacity: 0.8;">Hingga 6% p.a.</div>
                 </div>
             </div>
-            <button class="apply-btn">Ajukan</button>
-        </section>
+        </div>
 
-        <div style="height: 80px;"></div>
+        <div class="menu-grid">
+            <div class="menu-item"><i class="fa-solid fa-money-bill-transfer"></i>Transfer</div>
+            <div class="menu-item"><i class="fa-solid fa-file-invoice-dollar"></i>Top Up</div>
+            <div class="menu-item"><i class="fa-solid fa-wallet"></i>E-Wallet</div>
+            <div class="menu-item"><i class="fa-solid fa-user-plus"></i>Undang</div>
+            <div class="menu-item"><i class="fa-solid fa-piggy-bank"></i>Deposito</div>
+            <div class="menu-item"><i class="fa-solid fa-arrow-down-long"></i>Tarik Tunai</div>
+            <div class="menu-item"><i class="fa-solid fa-hand-holding-dollar"></i>Pinjam</div>
+            <div class="menu-item"><i class="fa-solid fa-ellipsis"></i>Lainnya</div>
+        </div>
 
         <nav class="bottom-nav">
-            <div class="nav-item active">
-                <i class="fa-solid fa-house"></i>
-                <span>Beranda</span>
-            </div>
-            <div class="nav-item">
-                <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                <span>Bayar/Transfer</span>
-            </div>
-            <div class="nav-item qr-item">
-                <div class="qr-circle">
-                    <i class="fa-solid fa-qrcode"></i>
-                </div>
-                <span>QRIS</span>
-            </div>
-            <div class="nav-item">
-                <i class="fa-solid fa-sack-dollar"></i>
-                <span>Deposito</span>
-            </div>
-            <div class="nav-item">
-                <i class="fa-solid fa-user"></i>
-                <span>Saya</span>
-            </div>
+            <a class="nav-link active"><i class="fa-solid fa-house"></i>Beranda</a>
+            <a class="nav-link"><i class="fa-solid fa-arrow-right-arrow-left"></i>Transfer</a>
+            <div class="qris-btn"><i class="fa-solid fa-qrcode" style="font-size: 24px;"></i></div>
+            <a class="nav-link"><i class="fa-solid fa-sack-dollar"></i>Deposito</a>
+            <a class="nav-link"><i class="fa-solid fa-user"></i>Saya</a>
         </nav>
-
     </div>
+
+    <script>
+        function switchView(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id).style.display = 'flex'; // Gunakan flex untuk Splash/FaceID
+            if(id === 'view-dashboard') document.getElementById(id).style.display = 'block';
+        }
+
+        function startApp() {
+            switchView('view-faceid');
+            setTimeout(() => {
+                switchView('view-dashboard');
+            }, 2000); // 2 detik scanning
+        }
+    </script>
 </body>
 </html>
