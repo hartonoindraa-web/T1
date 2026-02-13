@@ -109,4 +109,62 @@
             <div class="menu-item"><i class="fa-solid fa-money-bill-transfer"></i>Transfer</div>
             <div class="menu-item"><i class="fa-solid fa-file-invoice-dollar"></i>Top Up</div>
             <div class="menu-item"><i class="fa-solid fa-wallet"></i>E-Wallet</div>
-            <div class="menu-item">
+            <div class="menu-item"><i class="fa-solid fa-user-plus"></i>Undang</div>
+        </div>
+
+        <div class="promo-banner">
+            <div class="promo-text">
+                <h4>SeaBank Pinjam</h4>
+                <p>Dapatkan limit hingga</p>
+                <h2>Rp 30.000.000</h2>
+                <p style="color:var(--sb-blue);">Pencairan Instan • Bebas Biaya</p>
+            </div>
+            <button class="ajukan-btn">Ajukan</button>
+        </div>
+
+        <nav class="bottom-nav">
+            <div class="nav-link active"><i class="fa-solid fa-house"></i>Beranda</div>
+            <div class="nav-link"><i class="fa-solid fa-arrow-right-arrow-left"></i>Transfer</div>
+            <div class="qris-btn"><i class="fa-solid fa-qrcode"></i></div>
+            <div class="nav-link"><i class="fa-solid fa-sack-dollar"></i>Deposito</div>
+            <div class="nav-link"><i class="fa-solid fa-user"></i>Saya</div>
+        </nav>
+    </div>
+
+    <script>
+        // Logika Pindah Screen
+        document.getElementById('btn-start').addEventListener('click', function() {
+            document.getElementById('view-home-screen').style.display = 'none';
+            document.getElementById('view-faceid').style.display = 'flex';
+            
+            setTimeout(() => {
+                document.getElementById('view-faceid').style.display = 'none';
+                document.getElementById('view-dashboard').style.display = 'block';
+            }, 2000);
+        });
+
+        // Logika Toggle Saldo (FIXED)
+        let visible = false;
+        document.getElementById('balance-card').addEventListener('click', function() {
+            const m = document.getElementById('val-main');
+            const s1 = document.getElementById('val-sub1');
+            const s2 = document.getElementById('val-sub2');
+            const eye = document.getElementById('eye-icon');
+
+            if(!visible) {
+                m.innerText = "Rp 102.722.850";
+                s1.innerText = "Rp 102.722.850";
+                s2.innerText = "Rp 0";
+                eye.classList.replace('fa-eye-slash', 'fa-eye');
+                visible = true;
+            } else {
+                m.innerText = "Rp ******";
+                s1.innerText = "Rp ****";
+                s2.innerText = "Rp ****";
+                eye.classList.replace('fa-eye', 'fa-eye-slash');
+                visible = false;
+            }
+        });
+    </script>
+</body>
+</html>
